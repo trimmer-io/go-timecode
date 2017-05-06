@@ -248,13 +248,13 @@ func TestPassthrough(t *testing.T) {
 		}
 		s := tt.String()
 		if v.AsString != s {
-			t.Errorf("[Case #%.2d] Wrong passthrough: %s/%s", v.Id, v.AsString, s)
+			t.Errorf("[Case #%s] Wrong passthrough: %s/%s", v.Id, v.AsString, s)
 		}
 	}
 }
 
 type TimecodeMarshal struct {
-	T Timecode `json:'timecode'`
+	T Timecode `json:"timecode"`
 }
 
 func TestMarshal(t *testing.T) {
@@ -264,11 +264,11 @@ func TestMarshal(t *testing.T) {
 		}
 		b, err := json.Marshal(m)
 		if err != nil {
-			t.Errorf("[Case #%.2d] Marshal failed: %s", v.Id, err)
+			t.Errorf("[Case #%s] Marshal failed: %s", v.Id, err)
 		}
 		c := TimecodeMarshal{}
 		if err = json.Unmarshal(b, &c); err != nil {
-			t.Errorf("[Case #%.2d] Unmarshal failed: %s", v.Id, err)
+			t.Errorf("[Case #%s] Unmarshal failed: %s", v.Id, err)
 		}
 		c.T.SetRate(m.T.Rate())
 		v.Check(t, c.T)

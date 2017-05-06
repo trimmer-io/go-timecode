@@ -63,11 +63,11 @@ func TestTimecodeRateMax(t *testing.T) {
 		c := MaxRate(a, b)
 		if v.AisLower {
 			if !b.IsEqual(c) {
-				t.Errorf("[Case #%.2d] Failed max test %s != %s", v.Id, c, b)
+				t.Errorf("[Case #%.2d] Failed max test %s != %s", v.Id, c.RationalString(), b.RationalString())
 			}
 		} else {
 			if !a.IsEqual(c) {
-				t.Errorf("[Case #%.2d] Failed max test %s != %s", v.Id, c, a)
+				t.Errorf("[Case #%.2d] Failed max test %s != %s", v.Id, c.RationalString(), a.RationalString())
 			}
 		}
 	}
