@@ -273,8 +273,9 @@ func (r *Rate) UnmarshalText(data []byte) error {
 		// parse float
 		if f, err := strconv.ParseFloat(d, 32); err == nil {
 			*r = NewFloatRate(float32(f))
+		} else {
+			return fmt.Errorf("timecode: parsing rate \"%s\": invalid syntax: %v", d, err)
 		}
-		return fmt.Errorf("timecode: parsing rate \"%s\": invalid syntax", d)
 	}
 }
 
