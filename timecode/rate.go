@@ -277,6 +277,7 @@ func (r *Rate) UnmarshalText(data []byte) error {
 			return fmt.Errorf("timecode: parsing rate \"%s\": invalid syntax: %v", d, err)
 		}
 	}
+	return nil
 }
 
 // FrameDuration returns the duration of a single frame at the edit rate.
