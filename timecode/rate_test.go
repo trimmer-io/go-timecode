@@ -16,6 +16,7 @@ package timecode
 
 import (
 	"testing"
+	"time"
 )
 
 type RateTestcase struct {
@@ -36,6 +37,30 @@ var (
 		RateTestcase{5, 30000, 1001, 25, 1, false},
 		RateTestcase{6, 60000, 1001, 30000, 1001, false},
 		RateTestcase{7, 30000, 1001, 60000, 1001, true},
+	}
+)
+
+type RateDurationTestcase struct {
+	Rate Rate
+}
+
+var (
+	RateDurationTestcases []Rate = []Rate{
+		OneFpsRate,
+		// IdentityRate,
+		// IdentityRateDF,
+		Rate23976,
+		Rate24,
+		Rate25,
+		Rate30,
+		Rate30DF,
+		Rate48,
+		Rate50,
+		Rate60,
+		Rate60DF,
+		Rate96,
+		Rate100,
+		Rate120,
 	}
 )
 
@@ -68,6 +93,28 @@ func TestTimecodeRateMax(t *testing.T) {
 		} else {
 			if !a.IsEqual(c) {
 				t.Errorf("[Case #%.2d] Failed max test %s != %s", v.Id, c.RationalString(), a.RationalString())
+			}
+		}
+	}
+}
+
+func TestTimecodeRateDuration(t *testing.T) {
+	for i, v := range RateDurationTestcases {
+		num, den := v.Fraction()
+		real := time.Duration(float64(den) * 1000000000 / float64(num))
+		if d := v.FrameDuration(); d != real {
+			t.Errorf("[Case #%.2d] Wrong frame duration %d != %d (%d)", i, d, real, real-d)
+		}
+	}
+}
+
+func TestTimecodeDuration(t *testing.T) {
+	for i, v := range RateDurationTestcases {
+		num, den := v.Fraction()
+		for fps := v.Frames(time.Second) + 1; fps > 0; fps-- {
+			real := time.Duration(float64(fps) * 1000000000 * float64(den) / float64(num))
+			if d := v.Duration(fps); d != real {
+				t.Errorf("[Case #%.2d] Wrong duration rate %s for %d frames %d != %d (%d)", i, v.RationalString(), fps, d, real, real-d)
 			}
 		}
 	}

@@ -285,7 +285,7 @@ func (r Rate) FrameDuration() time.Duration {
 	if r.rateNum == 0 {
 		return time.Nanosecond
 	}
-	return time.Second * time.Duration(r.rateDen) / time.Duration(r.rateNum)
+	return time.Duration(1000000000 * float64(r.rateDen) / float64(r.rateNum))
 }
 
 // Duration returns the duration of f frames at the edit rate.
@@ -293,7 +293,7 @@ func (r Rate) Duration(f int64) time.Duration {
 	if r.rateNum == 0 {
 		return 0
 	}
-	d := time.Duration(f) * time.Second * time.Duration(r.rateDen) / time.Duration(r.rateNum)
+	d := time.Duration(float64(f) * 1000000000 * float64(r.rateDen) / float64(r.rateNum))
 	return r.Truncate(d, 2)
 }
 
@@ -305,6 +305,18 @@ func (r Rate) Frames(d time.Duration) int64 {
 // Truncate clips duration d to the edit rate's interval length, while internally
 // rounding to precision digits.
 func (r Rate) Truncate(d time.Duration, precision int) time.Duration {
+	i := int64(d)
+	n := int64(r.FrameDuration())
+	if x := i % n; x > n/2 {
+		return time.Duration(i + n - x)
+	} else if x > n/int64(precision) {
+		return time.Duration(i - x)
+	} else {
+		return d
+	}
+}
+
+func (r Rate) TruncateFloat(d float64, precision int) time.Duration {
 	pow := math.Pow(10, float64(precision))
 	rd := r.FrameDuration()
 	val := pow * float64(d) / float64(rd)
