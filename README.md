@@ -2,7 +2,7 @@ go-timecode
 ===========
 
 [![Build Status](https://travis-ci.org/trimmer-io/go-timecode.svg?branch=master)](https://travis-ci.org/trimmer-io/go-timecode)
-[![GoDoc](https://godoc.org/github.com/trimmer-io/go-timecode/timecode?status.svg)](https://godoc.org/github.com/trimmer-io/go-timecode/timecode)
+[![GoDoc](https://godoc.org/trimmer.io/go-timecode/timecode?status.svg)](https://godoc.org/trimmer.io/go-timecode/timecode)
 
 
 go-timecode is a [Go](http://golang.org/) library for SMPTE ST 12-1-2014 timecodes.

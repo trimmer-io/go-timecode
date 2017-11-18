@@ -1,5 +1,6 @@
 language: go
 sudo: false
+go_import_path: trimmer.io/go-timecode
 
 go:
   - 1.4
