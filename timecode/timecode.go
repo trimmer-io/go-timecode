@@ -36,7 +36,7 @@
 //
 // Timecode and edit rate are stored as a single 64bit integer for efficient
 // timecode handling and comparisons.
-package timecode
+package timecode // import "trimmer.io/go-timecode/timecode"
 
 import (
 	"database/sql/driver"
@@ -63,6 +63,7 @@ const (
 	rate_bits uint64   = 5  // = 16+16 frame rates (NDF+DF)
 	time_bits uint64   = 59 // ~9 years at 1 ns granularity (needs 30bit)
 	time_mask uint64   = (1<<time_bits - 1)
+	Mask               = time_mask
 )
 
 // New creates a new timecode from a time.Duration and an edit rate. The duration
@@ -280,6 +281,9 @@ func (t Timecode) String() string {
 // StringWithRate returns the timecode as string appended with the current
 // rate after a separating `@` character.
 func (t Timecode) StringWithRate() string {
+	if t.Rate().enum == IdentityRate.enum {
+		return t.String()
+	}
 	return fmt.Sprintf("%s@%s", t.String(), t.Rate().FloatString())
 }
 
