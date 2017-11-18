@@ -1,8 +1,8 @@
 go-timecode
 ===========
 
-[![Build Status](https://travis-ci.org/echa/go-timecode.svg?branch=master)](https://travis-ci.org/echa/go-timecode)
-[![GoDoc](https://godoc.org/github.com/echa/go-timecode/timecode?status.svg)](https://godoc.org/github.com/echa/go-timecode/timecode)
+[![Build Status](https://travis-ci.org/trimmer-io/go-timecode.svg?branch=master)](https://travis-ci.org/trimmer-io/go-timecode)
+[![GoDoc](https://godoc.org/github.com/trimmer-io/go-timecode/timecode?status.svg)](https://godoc.org/github.com/trimmer-io/go-timecode/timecode)
 
 
 go-timecode is a [Go](http://golang.org/) library for SMPTE ST 12-1-2014 timecodes.
@@ -27,15 +27,15 @@ It's probably the reason why drop-frame timecodes are often misunderstood. I gue
 Documentation
 -------------
 
-- [API Reference](http://godoc.org/github.com/echa/go-timecode/timecode)
-- [FAQ](https://github.com/echa/go-timecode/wiki/FAQ)
+- [API Reference](http://godoc.org/trimmer.io/go-timecode/timecode)
+- [FAQ](https://github.com/trimmer-io/go-timecode/wiki/FAQ)
 
 Installation
 ------------
 
 Install go-timecode using the "go get" command:
 
-    go get github.com/echa/go-timecode/timecode
+    go get trimmer.io/go-timecode/timecode
 
 The Go distribution is go-timecode's only dependency.
 
@@ -43,7 +43,7 @@ Examples
 --------
 
 ```
-import "github.com/echa/go-timecode/timecode"
+import "trimmer.io/go-timecode/timecode"
 
 tc := timecode.Parse("00:00:59;29")
 tc.SetRate(timecode.Rate30DF)
@@ -56,7 +56,7 @@ fmt.Println("Frame number at TC", tc, "is", tc.Frame())
 Contributing
 ------------
 
-See [CONTRIBUTING.md](https://github.com/echa/go-timecode/blob/master/.github/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/trimmer.io/go-timecode/blob/master/.github/CONTRIBUTING.md).
 
 
 License
