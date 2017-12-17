@@ -35,7 +35,7 @@ type Rate struct {
 	// Denominator value of the effective edit rate at which the data stream
 	// will advance in real-time. For most edit rates this value will be 1,
 	// drop-frame Television rates like 29.97, 59.94 and the special camera
-	// capture rate 23.976 are using 1001 here.
+	// capture rate 23.976 use 1001.
 	rateDen int
 	// Number of timecode address labels that will be dropped once per minute.
 	dropFrames int
@@ -74,6 +74,7 @@ const (
 
 // Common edit rate configurations you should use in your code when calling New()
 var (
+	InvalidRate    Rate = Rate{R_MAX, 0, 0, 0, 0, 0}
 	OneFpsRate     Rate = Rate{0, 1, 1, 1, 0, 1 * 600}                             // == 1fps
 	IdentityRate   Rate = Rate{0, 1000000000, 1000000000, 1, 0, 1000000000 * 600}  // == 1ns
 	IdentityRateDF Rate = Rate{df, 1000000000, 1000000000, 1, 0, 1000000000 * 600} // == 1ns
@@ -167,22 +168,22 @@ func NewFloatRate(f float32) Rate {
 // If the pased float or rational rate is approximately close to a pre-defined
 // standard rate, the standard rate's configuration including the appropriate
 // enum id will be used.
-func ParseRate(s string) Rate {
+func ParseRate(s string) (Rate, error) {
 	// try parsing as index
 	if i, err := strconv.Atoi(s); err == nil {
 		switch {
 		case i <= R_MAX:
 			fallthrough
 		case i == R_30DF || i == R_60DF:
-			return rates[i]
+			return rates[i], nil
 		default:
-			return NewFloatRate(float32(i))
+			return NewFloatRate(float32(i)), nil
 		}
 	}
 
 	// try parsing as float
 	if f, err := strconv.ParseFloat(s, 32); err == nil {
-		return NewFloatRate(float32(f))
+		return NewFloatRate(float32(f)), nil
 	}
 
 	// try parsing as rational
@@ -190,11 +191,11 @@ func ParseRate(s string) Rate {
 		a, _ := strconv.Atoi(fields[0])
 		b, err := strconv.Atoi(fields[1])
 		if err == nil && b > 0 {
-			return NewFloatRate(float32(a) / float32(b))
+			return NewFloatRate(float32(a) / float32(b)), nil
 		}
 	}
 
-	return IdentityRate
+	return InvalidRate, fmt.Errorf("timecode: parsing rate \"%s\": invalid syntax", s)
 }
 
 // IsZero indicates if the rate equals IdentityRate. This may be used to check if
@@ -270,11 +271,11 @@ func (r *Rate) UnmarshalText(data []byte) error {
 		*r = IdentityRate
 		return nil
 	default:
-		// parse float
-		if f, err := strconv.ParseFloat(d, 32); err == nil {
-			*r = NewFloatRate(float32(f))
+		if rr, err := ParseRate(d); err != nil {
+			return err
 		} else {
-			return fmt.Errorf("timecode: parsing rate \"%s\": invalid syntax: %v", d, err)
+			*r = rr
+			return nil
 		}
 	}
 	return nil

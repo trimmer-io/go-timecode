@@ -155,7 +155,11 @@ func Parse(s string) (Timecode, error) {
 	// strip and parse rate
 	if hasRate {
 		idx := strings.Index(s, "@")
-		r = ParseRate(s[idx+1:])
+		var err error
+		r, err = ParseRate(s[idx+1:])
+		if err != nil {
+			return Invalid, err
+		}
 		s = s[:idx]
 
 		// timecode is a frame counter, don't treat it as literal time!
