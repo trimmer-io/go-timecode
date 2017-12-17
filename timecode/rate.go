@@ -278,7 +278,6 @@ func (r *Rate) UnmarshalText(data []byte) error {
 			return nil
 		}
 	}
-	return nil
 }
 
 // FrameDuration returns the duration of a single frame at the edit rate.
